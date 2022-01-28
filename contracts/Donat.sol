@@ -1,17 +1,14 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
-import "@openzeppelin/contracts/access/AccessControl.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-//
 
-contract Donat is AccessControl {
+
+contract Donat is Ownable {
     address[] donaters;
     // donater address => total donation
     mapping(address => uint256) public donaterToDonation;
-
-    constructor() {
-        _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
-    }
 
     function donate() external payable {
         require(msg.value > 0, "donation must be greater than zero");
@@ -24,7 +21,7 @@ contract Donat is AccessControl {
 
     function withdrawDonations(address _recipient)
         external
-        onlyRole(DEFAULT_ADMIN_ROLE)
+        onlyOwner
     {
         payable(_recipient).transfer(address(this).balance);
     }
