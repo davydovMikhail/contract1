@@ -3,11 +3,9 @@ pragma solidity ^0.8.4;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-
-
 contract Donat is Ownable {
     address[] donaters;
-    // donater address => total donation
+
     mapping(address => uint256) public donaterToDonation;
 
     function donate() external payable {
@@ -19,10 +17,7 @@ contract Donat is Ownable {
         donaterToDonation[msg.sender] += msg.value;
     }
 
-    function withdrawDonations(address _recipient)
-        external
-        onlyOwner
-    {
+    function withdrawDonations(address _recipient) external onlyOwner {
         payable(_recipient).transfer(address(this).balance);
     }
 

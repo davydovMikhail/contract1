@@ -13,9 +13,12 @@ npx hardhat node
 node scripts/sample-script.js
 npx hardhat help
 ```
+
 test command sequence:
 
 npm install
 npx hardhat
 npx hardhat compile
 npx hardhat test
+
+Token address: 0x91758FA0a4e7646c23e32C5d817c7a5EDc917472
