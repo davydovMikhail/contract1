@@ -16,9 +16,11 @@ npx hardhat help
 
 test command sequence:
 
+```shell
 npm install
 npx hardhat
 npx hardhat compile
 npx hardhat test
+```
 
-Token address: 0x91758FA0a4e7646c23e32C5d817c7a5EDc917472
+Token address: 0xB3486253f3208a4A5d6FDF2d5dD07Bfa806BFac2

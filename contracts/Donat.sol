@@ -17,11 +17,22 @@ contract Donat is Ownable {
         donaterToDonation[msg.sender] += msg.value;
     }
 
-    function withdrawDonations(address _recipient) external onlyOwner {
-        payable(_recipient).transfer(address(this).balance);
+    function withdrawDonations(address _recipient, uint256 _amount)
+        external
+        onlyOwner
+    {
+        require(
+            _amount <= address(this).balance,
+            "the amount must be less than or equal to the balance"
+        );
+        payable(_recipient).transfer(_amount);
     }
 
     function getDonatersList() external view returns (address[] memory) {
         return donaters;
+    }
+
+    function addressTotal(address _address) external view returns (uint256) {
+        return donaterToDonation[_address];
     }
 }

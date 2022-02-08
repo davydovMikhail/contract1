@@ -1,19 +1,17 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
-// import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 const { SignerWithAddress } = require("@nomiclabs/hardhat-ethers/signers");
-// import { Contract } from "hardhat/internal/hardhat-network/stack-traces/model";
 const { Contract } = require("ethers");
 const { parseEther } = require("ethers/lib/utils");
 
 let donat = Contract;
 let owner = SignerWithAddress;
 let user1 = SignerWithAddress;
-// let donat: Contract, owner: SignerWithAddress, user1: SignerWithAddress
+let user2 = SignerWithAddress;
 
 describe("Donat tests", function () {
   beforeEach(async() => {
-    [owner, user1] = await ethers.getSigners()
+    [owner, user1, user2] = await ethers.getSigners()
     let donatF = await ethers.getContractFactory("Donat")
     donat = await donatF.connect(owner).deploy()
   })
@@ -50,12 +48,22 @@ describe("Donat tests", function () {
       let donationAmount = parseEther("1111.1111")
       await donat.connect(user1).donate({value: donationAmount})
       await donat.connect(user1).donate({value: donationAmount})
+
+      let balanceBeforeOtherUser = await user2.getBalance()
+      await donat.connect(owner).withdrawDonations(user2.address, donationAmount)
+      let balanceAfterOtherUser = await user2.getBalance()
       
-      let balanceBeforeOwner = await owner.getBalance()
-      await donat.connect(owner).withdrawDonations(owner.address)
-      let balanceAfterOwner = await owner.getBalance()
-      
-      expect(balanceAfterOwner.sub(balanceBeforeOwner)).closeTo(donationAmount.mul(2), 1e15)
+      expect(balanceAfterOtherUser.sub(balanceBeforeOtherUser)).closeTo(donationAmount, 1e15)
+    })
+  })
+
+  describe("addressTotal method", () => {
+    it("the method should return the total donation amount", async () => {
+      expect(await donat.addressTotal(user1.address)).eq(0)
+      let donationAmount = parseEther("1111.1111")
+      await donat.connect(user1).donate({value: donationAmount})
+      await donat.connect(user1).donate({value: donationAmount})
+      expect(await donat.addressTotal(user1.address)).closeTo(donationAmount.mul(2), 1e15)
     })
   })
 });
