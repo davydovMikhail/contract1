@@ -55,6 +55,15 @@ describe("Donat tests", function () {
       
       expect(balanceAfterOtherUser.sub(balanceBeforeOtherUser)).closeTo(donationAmount, 1e15)
     })
+
+    it("require", async () => {
+      let donationAmount = parseEther("1111.1111")
+      await donat.connect(user1).donate({value: donationAmount})
+
+      await expect(donat.connect(owner).withdrawDonations(user1.address, donationAmount.mul(2))).to.be.revertedWith(
+        "the amount must be less than or equal to the balance"
+      )
+    })
   })
 
   describe("addressTotal method", () => {
