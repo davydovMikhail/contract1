@@ -1,8 +1,10 @@
 import "@nomiclabs/hardhat-waffle";
+import "@nomiclabs/hardhat-web3";
 import "ts-node";
 require('dotenv').config();
 require("@nomiclabs/hardhat-ethers");
 import "solidity-coverage"
+require("./tasks")
 
 const { API_URL, PRIVATE_KEY } = process.env;
 
