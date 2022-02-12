@@ -2,12 +2,16 @@ const { task } = require("hardhat/config");
 require("@nomiclabs/hardhat-waffle");
 require('dotenv').config();
 
-task("withdrawDonations", "adds new minter from owner account")
+task("withdrawDonations", "transfer a certain amount to a certain address")
     .addParam("account", "transfer of a certain amount to a certain address")
     .addParam("amount", "transfer amount to beneficiary's address")
     .setAction(async function (taskArgs, hre) {
 
         const donat = await hre.ethers.getContractAt("Donat", process.env.ADDR_CONTRACT);
-        donat.withdrawDonations(taskArgs.account, taskArgs.amount);
-        console.log('withdrawDonations Done!');
+        try {
+            await donat.withdrawDonations(taskArgs.account, web3.utils.toWei(taskArgs.amount, 'ether'));
+            console.log('withdrawDonations Done!');
+        } catch (e) {
+            console.log('error', e);
+        }
     });
